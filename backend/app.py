@@ -44,6 +44,25 @@ def logedbd():
         return jsonify({"status": "fail", "message": "Nombre de usuario o contraseña incorrectos"}), 401
 
 
+
+@app.route('/accesos/<int:id>', methods=['GET'])
+def get_acceso(id):
+    cursor.execute("SELECT * FROM accesos WHERE id = %s", (id,))
+    result = cursor.fetchone()
+    
+    if result:
+        access = {
+            'id': result[0],
+            'clave': result[1],
+            'tarjeta_rfid': result[2],
+            'nombre_usuario': result[3],
+            'fecha_hora': result[4]
+        }
+        return jsonify(access)
+    else:
+        return jsonify({"status": "fail", "message": "Acceso no encontrado"}), 404
+
+
 @app.route('/accesos', methods=['GET'])
 def get_accesses():
     cursor.execute("SELECT * FROM accesos")
